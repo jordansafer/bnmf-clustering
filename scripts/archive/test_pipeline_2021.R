@@ -15,7 +15,7 @@ trait_ss_files <- trait_ss_files[!grepl("MAGIC", names(trait_ss_files))]  # Some
 initial_t2d_snps <- read_tsv("../data/T2D_initial_vars_pval.txt")
 set.seed(1)
 initial_t2d_snps <- sample_n(initial_t2d_snps, size=1000) %>%
-  select(VAR_ID=VAR_ID_hg19, PVALUE)
+  dplyr::select(VAR_ID=VAR_ID_hg19, PVALUE)
 
 rsID_map_file <- "/humgen/diabetes2/users/clairekim/list_VARID_rsID_updated.txt"  # From dbSNP v1.38 -- maps positional IDs to rsIDs
 

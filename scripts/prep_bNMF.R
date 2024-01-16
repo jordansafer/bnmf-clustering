@@ -51,7 +51,7 @@ fetch_summary_stats <- function(df_variants, gwas_ss_file, trait_ss_files, trait
       separate(VAR_ID, into=c("CHR", "POS", "REF", "ALT"), sep="_") %>%
       mutate(SNP=paste(CHR, POS, sep=":")) %>%
       mutate(Effect_Allele_PH = if("Effect_Allele_PH" %in% names(.)) Effect_Allele_PH else ALT) %>%
-      select(any_of(c('SNP', 'Effect_Allele_PH', 'REF', 'ALT', 'N_PH', 'BETA', 'SE', 'P_VALUE', 'z'))) %>%
+      dplyr::select(any_of(c('SNP', 'Effect_Allele_PH', 'REF', 'ALT', 'N_PH', 'BETA', 'SE', 'P_VALUE', 'z'))) %>%
       right_join(variant_df, by="SNP", suffix=c(".gwas", ".trait")) %>%
       subset(paste0(REF,ALT) %in% c(paste0(Risk_Allele, Nonrisk_Allele),
                                     paste0(Nonrisk_Allele,Risk_Allele))) %>% #if trait effect allele matches neither REF nor ALT from GWAS
@@ -67,7 +67,7 @@ fetch_summary_stats <- function(df_variants, gwas_ss_file, trait_ss_files, trait
                Effect_Allele_PH == Nonrisk_Allele ~ -z,
                TRUE ~ as.numeric(NA)  # For example, if trait effect allele matches neither REF nor ALT from GWAS
              )) %>%
-      select(SNP, z, N_PH, P_VALUE) %>%
+      dplyr::select(SNP, z, N_PH, P_VALUE) %>%
       drop_na()
   }
 
@@ -105,7 +105,7 @@ fetch_summary_stats <- function(df_variants, gwas_ss_file, trait_ss_files, trait
   
   my_vars <- c('SNP', 'ALT', 'REF', 'Risk_Allele', 'Nonrisk_Allele', 'P_VALUE', 'BETA', 'SE', 'z')
   gwas_ss <- gwas_ss %>%
-    select(any_of(my_vars))
+    dplyr::select(any_of(my_vars))
   
   print(head(gwas_ss))
   
@@ -114,7 +114,7 @@ fetch_summary_stats <- function(df_variants, gwas_ss_file, trait_ss_files, trait
     dplyr::rename(Risk_Allele_Orig=Risk_Allele) %>%
     separate(VAR_ID, into=c("CHR", "POS", "REF", "ALT"), sep="_") %>%
     mutate(SNP=paste(CHR, POS, sep=":")) %>%
-    select(SNP, Risk_Allele_Orig) %>%
+    dplyr::select(SNP, Risk_Allele_Orig) %>%
     inner_join(gwas_ss, by="SNP")
   print(paste0(nrow(variant_df), " of ", length(variant_vec)," variants are available in the primary GWAS."))
   print(sprintf("Max p-value in primary GWAS: %.3e", max(variant_df$P_VALUE)))
@@ -142,7 +142,7 @@ fetch_summary_stats <- function(df_variants, gwas_ss_file, trait_ss_files, trait
             col_names = T)
   
   variant_df <- variant_df %>% 
-    select(SNP, Risk_Allele, Nonrisk_Allele)
+    dplyr::select(SNP, Risk_Allele, Nonrisk_Allele)
   print(paste(nrow(variant_df), "remaining SNPs after p-value filtering"))
   
   print("Writing final SNPs to file for grepping...")
@@ -155,13 +155,13 @@ fetch_summary_stats <- function(df_variants, gwas_ss_file, trait_ss_files, trait
   # saveRDS(trait_df_long, file = "my_trait_df_long.rds")
   
   z_df_wide <- trait_df_long %>%
-    select(trait, SNP, z) %>%
+    dplyr::select(trait, SNP, z) %>%
     pivot_wider(names_from="trait", values_from="z")
   z_mat <- as.matrix(z_df_wide[, -1])
   rownames(z_mat) <- z_df_wide$SNP
   
   N_df_wide <- trait_df_long %>%
-    select(trait, SNP, N_PH) %>%
+    dplyr::select(trait, SNP, N_PH) %>%
     pivot_wider(names_from="trait", values_from="N_PH")
   N_mat <- as.matrix(N_df_wide[, -1])
   rownames(N_mat) <- N_df_wide$SNP

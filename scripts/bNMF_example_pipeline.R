@@ -92,7 +92,7 @@ for(i in 1:n_gwas) {
     separate(VAR_ID, into=c("CHR", "POS", "REF", "ALT"), sep="_", remove = F) %>%
     mutate(Risk_Allele = ifelse(BETA>=0, ALT, REF)) %>%
     mutate(GWAS = gwas$study[i]) %>%
-    select(VAR_ID, P_VALUE, Risk_Allele, GWAS)
+    dplyr::select(VAR_ID, P_VALUE, Risk_Allele, GWAS)
 
   print(nrow(vars))
   vars_sig = rbind(vars_sig, vars)
@@ -115,7 +115,7 @@ vars_sig_noIndels <- vars_sig_uniq %>%
   separate(VAR_ID, into=c("CHR","POS","REF","ALT"),sep="_",remove = F) %>%
   mutate(alleles = paste0(REF,ALT)) %>%
   subset(nchar(alleles)==2 | (nchar(alleles)<=4 & grepl(",",alleles))) %>%
-  select(VAR_ID, PVALUE, Risk_Allele, GWAS)
+  dplyr::select(VAR_ID, PVALUE, Risk_Allele, GWAS)
 print(paste("No. SNPs excluding indels:",nrow(vars_sig_noIndels)))
 
 save.image(file = file.path(project_dir, "pipeline_data.RData"))

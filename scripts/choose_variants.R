@@ -203,7 +203,7 @@ count_traits_per_variant <- function(gwas_variants, ss_files) {
   df_N <- variant_df_list %>%
     setNames(names(ss_files)) %>%
     bind_rows(.id="trait") %>%
-    select(trait, VAR_ID, N_PH) %>%
+    dplyr::select(trait, VAR_ID, N_PH) %>%
     pivot_wider(names_from="trait", values_from="N_PH") %>%
     data.frame()
 }
@@ -291,7 +291,7 @@ choose_proxies <- function(need_proxies,
     need_proxies <- need_proxies %>%
       separate(VAR_ID, into=c("CHR","POS","REF","ALT"),sep = "_",remove = F) %>%
       mutate(query_snp = paste0("chr", CHR, ":", POS)) %>%
-      select(-c(CHR, POS, REF, ALT))
+      dplyr::select(-c(CHR, POS, REF, ALT))
     need_proxies_snps <- need_proxies$query_snp
 
    LDlinkR::LDproxy_batch(need_proxies_snps,
@@ -308,7 +308,7 @@ choose_proxies <- function(need_proxies,
      filter(!duplicated(RS_Number)) %>%
      dplyr::select(rsID, proxy_rsID=RS_Number, r2=R2) 
    need_proxies <- need_proxies %>%
-     select(-c(query_snp))
+     dplyr::select(-c(query_snp))
     
   } else if (method=="TopLD") { # use TopLD
     print(sprintf("Using TopLD to find proxies for %s!", population))
@@ -330,7 +330,7 @@ choose_proxies <- function(need_proxies,
         }
       }
     proxy_df <- fread("outputLD.txt", stringsAsFactors = F, data.table = F) %>%
-      select(rsID=rsID1, proxy_rsID=rsID2, r2=R2) %>%
+      dplyr::select(rsID=rsID1, proxy_rsID=rsID2, r2=R2) %>%
       subset(proxy_rsID %like% "rs")
   } 
   else {

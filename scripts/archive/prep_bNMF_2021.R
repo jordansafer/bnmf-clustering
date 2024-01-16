@@ -34,7 +34,7 @@ fetch_summary_stats <- function(variant_vec, gwas_ss_file, trait_ss_files) {
     df %>%
       separate(VAR_ID, into=c("CHR", "POS", "REF", "ALT"), sep="_") %>%
       mutate(SNP=paste(CHR, POS, sep=":")) %>%
-      select(SNP, Effect_Allele_PH, N_PH, BETA, SE, P_VALUE) %>%
+      dplyr::select(SNP, Effect_Allele_PH, N_PH, BETA, SE, P_VALUE) %>%
       right_join(variant_df, by="SNP", suffix=c(".gwas", ".trait")) %>%
       mutate(z=BETA / SE,  # First, calculate z-score magnitude
              z=case_when(  # Next, align z-score sign with GWAS phenotype-raising allele
@@ -42,18 +42,18 @@ fetch_summary_stats <- function(variant_vec, gwas_ss_file, trait_ss_files) {
                Effect_Allele_PH == Nonrisk_Allele ~ -z,
                TRUE ~ as.numeric(NA)  # For example, if trait effect allele matches neither REF nor ALT from GWAS
              )) %>%
-      select(SNP, z, N_PH, P_VALUE)
+      dplyr::select(SNP, z, N_PH, P_VALUE)
   }
   
   print("Retrieving risk alleles from the original GWAS summary statistics...")
   gwas_ss <- fread(gwas_ss_file, data.table=F, stringsAsFactors=F) %>%
     mutate(Risk_Allele=ifelse(BETA > 0, ALT, REF),
            Nonrisk_Allele=ifelse(BETA > 0, REF, ALT)) %>%
-    select(SNP, Risk_Allele, Nonrisk_Allele)
+    dplyr::select(SNP, Risk_Allele, Nonrisk_Allele)
   variant_df <- tibble(VAR_ID=variant_vec) %>%
     separate(VAR_ID, into=c("CHR", "POS", "REF", "ALT"), sep="_") %>%
     mutate(SNP=paste(CHR, POS, sep=":")) %>%
-    select(SNP) %>%
+    dplyr::select(SNP) %>%
     inner_join(gwas_ss, by="SNP")
   print(paste0(nrow(variant_df), " of ", length(variant_vec),
                " variants are available in the primary GWAS."))
@@ -65,13 +65,13 @@ fetch_summary_stats <- function(variant_vec, gwas_ss_file, trait_ss_files) {
     bind_rows(.id="trait")  # Bind all processed trait datasets into a single "long" data frame
   
   z_df_wide <- trait_df_long %>%
-    select(trait, SNP, z) %>%
+    dplyr::select(trait, SNP, z) %>%
     pivot_wider(names_from="trait", values_from="z")
   z_mat <- as.matrix(z_df_wide[, -1])
   rownames(z_mat) <- z_df_wide$SNP
   
   N_df_wide <- trait_df_long %>%
-    select(trait, SNP, N_PH) %>%
+    dplyr::select(trait, SNP, N_PH) %>%
     pivot_wider(names_from="trait", values_from="N_PH")
   N_mat <- as.matrix(N_df_wide[, -1])
   rownames(N_mat) <- N_df_wide$SNP
