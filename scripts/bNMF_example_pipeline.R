@@ -1,6 +1,6 @@
 # This script shows how to run the bNMF clustering pipeline using toy datasets.
 
-# Note: brew install pandoc, required before running this script
+# Note: brew install pandoc, required before running this script. Then add pandoc to R path.
 #----
 start=Sys.time()
 

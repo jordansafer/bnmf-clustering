@@ -9,4 +9,6 @@ pipeline_walkthrough/*
 scripts/test_results/
 scripts/*.tmp
 scripts/combined_query_snp_list_grch37.txt
+scripts/results_for_maxK_files/
+
 

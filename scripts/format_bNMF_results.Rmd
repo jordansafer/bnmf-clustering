@@ -186,6 +186,9 @@ ggplot(data=run_sum_max, aes(x=K, y=convergence, fill=K)) +
         plot.title = element_text(size = 24, face = "bold"))+
     ggtitle("Convergence Scores by K")
 
+if (!requireNamespace("ggrepel", quietly = TRUE)) {
+    install.packages("ggrepel")
+}
 library(ggrepel)
 
 df <- k_counts %>%
