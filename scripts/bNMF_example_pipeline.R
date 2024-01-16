@@ -31,7 +31,7 @@ setwd(dirname(getActiveDocumentContext()$path))
 
 # USER INPUTS!!!
 project_dir = './test_results' # path to where you want results saved
-user_token = 'e8f886b0b32c' # token for LDlinkR api
+user_token = 'cb5457b210a6' # token for LDlinkR api
 
 # create project folder 
 dir.create(project_dir)
