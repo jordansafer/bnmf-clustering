@@ -7,6 +7,6 @@ cache/*
 pipeline_walkthrough/*
 
 scripts/test_results/
-scripts/all_snps_varids.tmp
-scripts/need_proxies_varid.tmp
+scripts/*.tmp
 scripts/combined_query_snp_list_grch37.txt
+
