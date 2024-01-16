@@ -5,3 +5,5 @@ cache/*
 
 *.DS_store
 pipeline_walkthrough/*
+
+scripts/test_results/

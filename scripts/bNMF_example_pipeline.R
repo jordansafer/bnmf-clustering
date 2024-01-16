@@ -14,6 +14,12 @@ if (!require("BiocManager", quietly = TRUE))
 BiocManager::install("GenomicRanges")
 BiocManager::install("Homo.sapiens")
 
+if (!require("LDlinkR", quietly = TRUE))
+  install.packages("LDlinkR")
+
+# change dir to bnmf-clustering/scripts (cd to it)
+setwd(dirname(getActiveDocumentContext()$path))
+
 # load project scripts containing bNMF functions
 source("../scripts/choose_variants.R")  # ld_pruning, count_traits_per_variant, fina_variants_needing_proxies, & choose_potential_proxies
 source("../scripts/prep_bNMF.R")  # fetch_summary_stats & prep_z_matrix
@@ -25,7 +31,7 @@ setwd(dirname(getActiveDocumentContext()$path))
 
 # USER INPUTS!!!
 project_dir = './test_results' # path to where you want results saved
-user_token = 'cb5457b210a6' # token for LDlinkR api
+user_token = 'e8f886b0b32c' # token for LDlinkR api
 
 # create project folder 
 dir.create(project_dir)
@@ -92,11 +98,15 @@ for(i in 1:n_gwas) {
 }
 print(paste("No. total SNPs below pval cutoff:",nrow(vars_sig)))
 
+
 # remove duplicates
 vars_sig_uniq <- vars_sig %>%
   arrange(VAR_ID, P_VALUE) %>%
   filter(!duplicated(VAR_ID)) %>% # so we remove duplicates with the higher pvalue
-  rename(PVALUE = P_VALUE)
+  dplyr::rename(PVALUE = P_VALUE)
+
+
+
 print(paste("No. unique SNPs:",nrow(vars_sig_uniq)))
 
 # remove indels

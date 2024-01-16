@@ -46,7 +46,7 @@ fetch_summary_stats <- function(df_variants, gwas_ss_file, trait_ss_files, trait
                      z="ZSCORE")
     
     df <- df %>%
-      rename(any_of(rename_cols)) %>%
+      dplyr::rename(any_of(rename_cols)) %>%
       filter(!duplicated(VAR_ID)) %>%
       separate(VAR_ID, into=c("CHR", "POS", "REF", "ALT"), sep="_") %>%
       mutate(SNP=paste(CHR, POS, sep=":")) %>%
@@ -111,7 +111,7 @@ fetch_summary_stats <- function(df_variants, gwas_ss_file, trait_ss_files, trait
   
   print("Merging formatted GWAS with final variant vector...")
   variant_df <- df_variants %>%
-    rename(Risk_Allele_Orig=Risk_Allele) %>%
+    dplyr::rename(Risk_Allele_Orig=Risk_Allele) %>%
     separate(VAR_ID, into=c("CHR", "POS", "REF", "ALT"), sep="_") %>%
     mutate(SNP=paste(CHR, POS, sep=":")) %>%
     select(SNP, Risk_Allele_Orig) %>%

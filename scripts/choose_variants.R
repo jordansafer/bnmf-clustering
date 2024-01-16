@@ -97,7 +97,7 @@ ld_prune <- function(df_snps,
           genome_build = "grch37",
           table_type = "variant"
     ) %>%
-      rename(Alleles=Allele_Frequency) %>%
+      dplyr::rename(Alleles=Allele_Frequency) %>%
       mutate(Details="Variant kept.")
   } else { # >1 SNP
     if (between(nrow(cur_chr), 1, 5000)) { 
@@ -184,7 +184,7 @@ count_traits_per_variant <- function(gwas_variants, ss_files) {
                   col.names=headers,
                   data.table=F,
                   stringsAsFactors=F) %>%
-        rename(any_of(rename_cols))
+        dplyr::rename(any_of(rename_cols))
         
     } else {
       df <- fread(cmd=sprintf("fgrep -wf all_snps_varids.tmp %s ",ss_files[i]),
@@ -192,7 +192,7 @@ count_traits_per_variant <- function(gwas_variants, ss_files) {
                   col.names=headers,
                   data.table=F,
                   stringsAsFactors=F) %>%
-        rename(any_of(rename_cols)) 
+        dplyr::rename(any_of(rename_cols)) 
         
     }
     print(nrow(df))
